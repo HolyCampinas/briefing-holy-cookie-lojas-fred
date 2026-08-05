@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Banco de Vídeos Virais — Holy Cookie (Lojas do Fred)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #faf6f0; color: #33241a; line-height: 1.55; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 80px; }
+  header { text-align: center; padding: 40px 16px 28px; }
+  header h1 { font-size: 2.2rem; color: #6b3f1d; letter-spacing: 1px; }
+  header .sub { font-size: 1.05rem; margin-top: 6px; }
+  header .sub2 { color: #b8862d; font-size: .9rem; margin-top: 2px; }
+  .box { background: #fff; border: 1px solid #e8dccc; border-radius: 14px; padding: 22px 26px; margin: 18px 0; box-shadow: 0 1px 4px rgba(107,63,29,.06); }
+  .box h2 { color: #6b3f1d; font-size: 1.25rem; margin-bottom: 10px; }
+  .box p { margin: 8px 0; }
+  .lead { font-weight: 700; font-size: 1.05rem; }
+  nav.toc { position: sticky; top: 0; z-index: 8; background: #faf6f0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; padding: 10px 0; margin: 8px 0 4px; border-bottom: 2px solid #e8dccc; }
+  .vtab { font-weight: 700; font-size: 1rem; padding: 10px 22px; border-radius: 999px; background: #fff; border: 2px solid #e8dccc; color: #6b3f1d; cursor: pointer; }
+  .vtab.active { background: #6b3f1d; border-color: #6b3f1d; color: #fff; }
+  .view { display: none; }
+  .view.active { display: block; }
+  .tabbar { position: sticky; top: 58px; z-index: 6; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; padding: 12px 8px; margin-top: 20px; background: #faf6f0; border-bottom: 2px solid #e8dccc; }
+  .tab { border: 2px solid #e8dccc; background: #fff; color: #6b3f1d; font-size: 1rem; font-weight: 700; padding: 10px 22px; border-radius: 999px; cursor: pointer; }
+  .tab.active { background: var(--tabcor); border-color: var(--tabcor); color: #fff; }
+  .tab .tcount { font-size: .78rem; opacity: .8; margin-left: 4px; }
+  .tabpane { display: none; margin-top: 20px; }
+  .tabpane.active { display: block; }
+  .objdef { font-size: .92rem; margin-bottom: 12px; }
+  .exhead { font-size: 1.25rem; margin: 26px 0 10px; }
+  .fmttable { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 10px 0 14px; background: #fff; }
+  .fmttable th { background: #6b3f1d; color: #fff; padding: 7px 10px; text-align: left; }
+  .fmttable td { border: 1px solid #e8dccc; padding: 7px 10px; }
+  .fmttable tr:nth-child(even) td { background: #faf6f0; }
+  .fmttable .ctr { text-align: center; }
+  details.fmt { background: #fff; border: 1px solid #e8dccc; border-radius: 12px; margin: 8px 0; }
+  details.fmt summary { cursor: pointer; padding: 12px 16px; font-size: .95rem; color: #6b3f1d; }
+  details.fmt summary:hover { background: #f5ebdf; border-radius: 12px; }
+  details.fmt[open] summary { border-bottom: 1px solid #e8dccc; }
+  details.fmt .grid { padding: 14px; }
+  .fqtd { color: #8a6d55; font-size: .8rem; font-weight: 400; margin-left: 6px; }
+  .filters { margin: 10px 0 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .fbtn { border: 1px solid #e8dccc; background: #fff; color: #6b3f1d; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: .85rem; }
+  .fbtn.active { background: #6b3f1d; color: #fff; border-color: #6b3f1d; }
+  .legenda { display: flex; gap: 14px; flex-wrap: wrap; font-size: .78rem; color: #8a6d55; margin: -6px 0 16px; }
+  .legenda span { background: #fff; border: 1px solid #e8dccc; border-radius: 8px; padding: 4px 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .card { background: #fff; border: 1px solid #e8dccc; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 1px 4px rgba(107,63,29,.06); }
+  .card.off { opacity: .6; }
+  .cardhead { padding: 12px 14px 4px; font-size: 1rem; }
+  .num { font-weight: 800; color: #b8862d; margin-right: 4px; }
+  .nome { font-weight: 700; }
+  .pick { display: block; margin: 4px 14px 8px; font-size: .84rem; font-weight: 700; color: #2e7d32; cursor: pointer; background: #f0f7f1; border: 1px solid #cfe3d2; border-radius: 8px; padding: 6px 10px; }
+  .pick input { accent-color: #2e7d32; margin-right: 4px; }
+  .card:has(.pickbox:checked) { outline: 3px solid #2e7d32; }
+  .badges { padding: 0 14px 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .meta { padding: 0 14px 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: .78rem; }
+  .autor { font-weight: 700; color: #1155cc; text-decoration: none; }
+  .vazio { color: #b3a08c; font-weight: 400; font-style: italic; }
+  .player { background: #f5ebdf; min-height: 300px; display: flex; align-items: center; justify-content: center; }
+  .player iframe { width: 100%; height: 460px; border: 0; background: #fff; }
+  .noembedbox { text-align: center; padding: 24px; color: #6b3f1d; font-size: .88rem; }
+  .restart { width: 100%; border: 0; border-top: 1px solid #e8dccc; background: #f5ebdf; color: #6b3f1d; font-weight: 700; font-size: .82rem; padding: 8px; cursor: pointer; }
+  .restart:hover { background: #b8862d; color: #fff; }
+  .cardbody { padding: 12px 14px 14px; font-size: .86rem; display: flex; flex-direction: column; gap: 6px; }
+  .sug { background: #fdf3e0; border-radius: 8px; padding: 8px 10px; }
+  .iglink { font-size: .8rem; color: #1155cc; }
+  .selbox { background: #fff; border: 2px solid #2e7d32; border-radius: 14px; padding: 16px 20px; margin: 14px 0 6px; }
+  .selbox h3 { color: #2e7d32; margin-bottom: 8px; }
+  .sellist { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; font-size: .85rem; }
+  .sellist .selchip { background: #f0f7f1; border: 1px solid #cfe3d2; color: #2e7d32; font-weight: 700; border-radius: 999px; padding: 4px 12px; }
+  .selnota { font-size: .75rem; color: #8a6d55; margin-left: 10px; }
+  footer { text-align: center; margin-top: 50px; font-size: .85rem; color: #8a6d55; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🍪 HOLY COOKIE — LOJAS DO FRED</h1>
+  <div class="sub"><b>Banco de Vídeos Virais — Briefing de Produção</b></div>
+  <div class="sub2">Exclusivo para as 3 lojas próprias do Fred · Agosto/2026</div>
+</header>
+
+<nav class="toc">
+  <button class="vtab active" data-view="view-briefing">📋 Briefing</button>
+  <button class="vtab" data-view="view-banco">🎬 Banco de vídeos</button>
+</nav>
+
+<div class="view active" id="view-briefing">
+<div class="box">
+  <h2>1. O objetivo deste projeto</h2>
+  <p class="lead">Aumentar a margem líquida e o lucro líquido das lojas próprias do Fred, através do aumento das vendas de Loja — o canal que possui a margem maior.</p>
+  <p><b>Como vamos fazer isso?</b> Levando mais pessoas para a loja com CAC zero — sem investir um real em anúncios — e, consequentemente, aumentando as vendas, através de conteúdo de ENTRETENIMENTO.</p>
+</div>
+
+<div class="box">
+  <h2>2. A diferença deste banco</h2>
+  <p>Este briefing é exclusivo para as <b>3 lojas próprias da Holy Cookie</b> do Fred (separado da franquia como um todo). A regra principal: <b>priorizar vídeos de roteiro Simples e Autoral leve</b> — capacidade de gravação limitada. Vídeos Complexos ficam registrados na lista, mas fora do plano padrão — o Fred escolhe caso a caso se algum vale o investimento extra de produção.</p>
+</div>
+
+<div class="box">
+  <h2>3. Os três objetivos dos vídeos</h2>
+  <table class="fmttable">
+    <tr><th>Objetivo</th><th>O que significa</th><th>Métrica</th></tr>
+    <tr><td><b>🚀 Crescimento</b></td><td>Fazer quem NUNCA ouviu falar das lojas assistir, compartilhar e seguir.</td><td>Alcance, compartilhamentos, seguidores</td></tr>
+    <tr><td><b>🤝 Confiança</b></td><td>Fazer quem já chegou acreditar que o cookie é bom e que existe gente de verdade ali.</td><td>Retenção, salvamentos, "preciso provar"</td></tr>
+    <tr><td><b>💰 Venda</b></td><td>Dar um motivo concreto para comprar hoje.</td><td>Movimento na loja, pedidos, cliques</td></tr>
+  </table>
+</div>
+
+<div class="box">
+  <h2>4. Destaque de curadoria</h2>
+  <p>• <b>@cookiebeacon é referência-mestra deste banco:</b> 10 dos 54 vídeos são do mesmo perfil (marca de cookies já validada nos EUA) — formatos C3, C4 e V1 vêm quase inteiros de lá.</p>
+  <p>• <b>93% do banco é Simples ou Autoral leve</b> (29 Simples + 21 Autoral, só 4 Complexos) — compatível com a capacidade de produção das lojas.</p>
+</div>
+</div>
+
+<div class="view" id="view-banco">
+<div class="tabbar" id="tabs"><button class="tab active" data-tab="crescimento" style="--tabcor:#2e7d32">🚀 Crescimento <span class="tcount">23</span></button><button class="tab" data-tab="confianca" style="--tabcor:#1e5b8a">🤝 Confiança <span class="tcount">18</span></button><button class="tab" data-tab="venda" style="--tabcor:#b8862d">💰 Venda <span class="tcount">16</span></button></div>
+
+<section id="crescimento" class="tabpane active">
+  <p class="objdef"><b>Objetivo:</b> Fazer quem NUNCA ouviu falar das lojas assistir, compartilhar e seguir. &nbsp;·&nbsp; <b>Métrica:</b> Alcance, compartilhamentos, seguidores novos</p>
+  <h3 class="exhead" style="color:#2e7d32">Formatos (7)</h3>
+  <table class="fmttable"><tr><th>Nº</th><th>Formato</th><th>Qtd</th></tr><tr><td><b>C1</b></td><td>Sketch com twist/reviravolta</td><td class="ctr">4</td></tr><tr><td><b>C2</b></td><td>Trend de reação/POV curta</td><td class="ctr">4</td></tr><tr><td><b>C3</b></td><td>Desafio de rua/compartilhamento com prêmio</td><td class="ctr">5</td></tr><tr><td><b>C4</b></td><td>Jogo de previsão/engajamento</td><td class="ctr">2</td></tr><tr><td><b>C5</b></td><td>Comédia relacionável cotidiana</td><td class="ctr">3</td></tr><tr><td><b>C6</b></td><td>Ato de bondade viral</td><td class="ctr">1</td></tr><tr><td><b>C7</b></td><td>Trend visual editada</td><td class="ctr">2</td></tr></table>
+  <details class="fmt">
+<summary><b>C1</b> — Sketch com twist/reviravolta <span class="fqtd">4 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#1</span> <span class="nome">Assalto encenado que poupa só os cookies</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="1" data-nome="Assalto encenado que poupa só os cookies"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/crumblverse/" target="_blank" rel="noopener">@crumblverse</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYAF7YKu_Sf/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Assaltante libera bens, mas briga para recuperar só a caixa de cookies — prioridade invertida</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Encenar &quot;assalto&quot; cômico na porta da loja; assaltante libera tudo, menos a caixa de cookies</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYAF7YKu_Sf/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#10</span> <span class="nome">&quot;Pepsi errada&quot; — desculpa dramática por erro banal</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="10" data-nome="&quot;Pepsi errada&quot; — desculpa dramática por erro banal"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><span class="autor vazio">perfil não identificado</span></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYnamCTxl-c/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Discurso emocional pesado por um &quot;erro&quot; que no fim é banal (bebida trocada)</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente se desculpa de forma dramática por erro mínimo (sabor trocado)</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYnamCTxl-c/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#21</span> <span class="nome">Atendente erra pedido 3x e come o erro</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="21" data-nome="Atendente erra pedido 3x e come o erro"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/pasteldoleoo/" target="_blank" rel="noopener">@pasteldoleoo</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYuw8VbhBBe/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Comédia autodepreciativa POV, clímax: ela mesma come o produto errado</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente &quot;erra&quot; sabor entregue, reage exagerado, come o cookie &quot;errado&quot; satisfeita</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYuw8VbhBBe/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#31</span> <span class="nome">Cliente &quot;difícil&quot; na maquininha, virada no final</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="31" data-nome="Cliente &quot;difícil&quot; na maquininha, virada no final"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/fabricio_ferrari/" target="_blank" rel="noopener">@fabricio_ferrari</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DUmG-puDZ23/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Paciência exagerada do atendente + desfecho subverte final &quot;bonzinho&quot;</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cena no caixa: pagamento falha, atendente super gentil, virada engraçada</p>
+    <a class="iglink" href="https://www.instagram.com/p/DUmG-puDZ23/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>C2</b> — Trend de reação/POV curta <span class="fqtd">4 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#8</span> <span class="nome">&quot;Foto comigo e meus waffles&quot; que ainda nem chegaram</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="8" data-nome="&quot;Foto comigo e meus waffles&quot; que ainda nem chegaram"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/ihoptotowanj/" target="_blank" rel="noopener">@ihoptotowanj</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaDmjyMhTk4/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Contraste entre expectativa de photo-op e prato ainda vazio</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Funcionário pede foto &quot;com os cookies&quot; do cliente, mas a caixa está vazia (ainda assando)</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaDmjyMhTk4/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#9</span> <span class="nome">Gerente manda &quot;sorrir mais&quot;, funcionário deadpan</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="9" data-nome="Gerente manda &quot;sorrir mais&quot;, funcionário deadpan"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/sofresh/" target="_blank" rel="noopener">@sofresh</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DXUUe7xjRLs/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Feedback absurdo + resposta seca e desconectada — humor deadpan</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Gerente pede pro atendente sorrir mais, ele responde seco e sem expressão</p>
+    <a class="iglink" href="https://www.instagram.com/p/DXUUe7xjRLs/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#12</span> <span class="nome">Garçom &quot;ameaça&quot; com utensílios (trend &quot;E aí&quot;)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="12" data-nome="Garçom &quot;ameaça&quot; com utensílios (trend &quot;E aí&quot;)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/templudohamburguer/" target="_blank" rel="noopener">@templudohamburguer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DIpI9DDyRPS/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Gestos exagerados/brincalhões com utensílios perto da mesa, áudio de trend</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente faz gesto de &quot;hype&quot; exagerado com colher/espátula ao servir cookie quente</p>
+    <a class="iglink" href="https://www.instagram.com/p/DIpI9DDyRPS/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#18</span> <span class="nome">&quot;POV: quando alguém sorri para você&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="18" data-nome="&quot;POV: quando alguém sorri para você&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/kindofabigdeal/" target="_blank" rel="noopener">@kindofabigdeal</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaLTda6K87T/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Trend de reação exagerada em corte seco</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente/cliente reage exagerado à primeira mordida do cookie quentinho</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaLTda6K87T/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>C3</b> — Desafio de rua/compartilhamento com prêmio <span class="fqtd">5 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#24</span> <span class="nome">Desafio &quot;coma a mesa de sobremesas em 3 min&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="24" data-nome="Desafio &quot;coma a mesa de sobremesas em 3 min&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/littledessertshop/" target="_blank" rel="noopener">@littledessertshop</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYrgZzKIg0g/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Gatilho de desafio + fartura visual, convite a marcar amigos</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Torre de cookies variados com legenda de desafio, incentivo a marcações</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYrgZzKIg0g/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#41</span> <span class="nome">&quot;Flip the bottle and grab a cookie&quot; — desafio de rua</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="41" data-nome="&quot;Flip the bottle and grab a cookie&quot; — desafio de rua"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Da3Ti_5xc4z/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Ativação de rua: tentativas + torcida + recompensa</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Desafio de bottle flip na porta da loja para ganhar cookie grátis</p>
+    <a class="iglink" href="https://www.instagram.com/p/Da3Ti_5xc4z/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#49</span> <span class="nome">Desafio &quot;termine o cookie em 4 mordidas, ganhe a caixa&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="49" data-nome="Desafio &quot;termine o cookie em 4 mordidas, ganhe a caixa&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DXTtTv5g6et/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Challenge de rua: proposta + tensão + recompensa + reação genuína</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente aborda cliente/fila com o mesmo desafio, entrega caixa grátis</p>
+    <a class="iglink" href="https://www.instagram.com/p/DXTtTv5g6et/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#51</span> <span class="nome">Mesmo desafio &quot;4 mordidas&quot; (sabor Oreo)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="51" data-nome="Mesmo desafio &quot;4 mordidas&quot; (sabor Oreo)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DVs4gK8IuBl/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Mesma estrutura do #49, repetida — confirma formato replicável em série</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Repetir a dinâmica com clientes/sabores diferentes, criar série</p>
+    <a class="iglink" href="https://www.instagram.com/p/DVs4gK8IuBl/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#52</span> <span class="nome">Jogo de rua &quot;adivinhe o sabor pelo cookie&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="52" data-nome="Jogo de rua &quot;adivinhe o sabor pelo cookie&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DT7iHqEADeM/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Totem de sabores + interação espontânea de passantes</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Caixa simples na porta da loja para clientes adivinharem sabores</p>
+    <a class="iglink" href="https://www.instagram.com/p/DT7iHqEADeM/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>C4</b> — Jogo de previsão/engajamento <span class="fqtd">2 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#44</span> <span class="nome">&quot;Qual cookie ela vai escolher?&quot; — jogo de previsão</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="44" data-nome="&quot;Qual cookie ela vai escolher?&quot; — jogo de previsão"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZrq6PSglgn/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Desafio + sequência numerada de sabores + revelação</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente/cliente lança desafio, mostra 3-4 sabores sendo partidos, revela escolha</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZrq6PSglgn/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#45</span> <span class="nome">&quot;Adivinha qual eu vou escolher&quot; — 3 bebidas numeradas</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="45" data-nome="&quot;Adivinha qual eu vou escolher&quot; — 3 bebidas numeradas"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZmoJBcA0S8/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Quase foto estática + pergunta de engajamento, gera comentários</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> 3 cookies numerados na mesa, pergunta de palpite nos comentários</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZmoJBcA0S8/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>C5</b> — Comédia relacionável cotidiana <span class="fqtd">3 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#7</span> <span class="nome">&quot;Tradução&quot; cômica da indecisão da namorada no pedido</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="7" data-nome="&quot;Tradução&quot; cômica da indecisão da namorada no pedido"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/joycelyn_e98/" target="_blank" rel="noopener">@joycelyn_e98</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DTysEuQEaJO/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Narrador exagera cada resposta vaga dela sobre o pedido</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Casal decidindo sabor de cookie, narrador &quot;traduz&quot; de forma exagerada cada indecisão</p>
+    <a class="iglink" href="https://www.instagram.com/p/DTysEuQEaJO/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#29</span> <span class="nome">Confeiteira só pode comer os cookies &quot;quebrados&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="29" data-nome="Confeiteira só pode comer os cookies &quot;quebrados&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/karolbabadeira/" target="_blank" rel="noopener">@karolbabadeira</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DbGPSViRevP/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Regra restritiva do chefe + funcionária &quot;burlando&quot; de propósito — já é sobre cookie</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Encaixe direto: atendente &quot;lascando&quot; cookie de propósito pra poder comer</p>
+    <a class="iglink" href="https://www.instagram.com/p/DbGPSViRevP/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Complexo">
+  <div class="cardhead"><span class="num">#30</span> <span class="nome">Curta cinematográfico &quot;elogio ao vestido&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="30" data-nome="Curta cinematográfico &quot;elogio ao vestido&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">Tipo 3 · Complexo</span></div>
+  <div class="meta"><span class="autor vazio">perfil não identificado</span></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Da-2Lm3uy0u/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Diálogo-gancho de trend solto de uma produção cinematográfica cara</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Só a frase-gancho: cliente e atendente percebem que pediram o mesmo sabor</p>
+    <a class="iglink" href="https://www.instagram.com/p/Da-2Lm3uy0u/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>C6</b> — Ato de bondade viral <span class="fqtd">1 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#34</span> <span class="nome">Lanche grátis surpresa para passageiros de ônibus</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="34" data-nome="Lanche grátis surpresa para passageiros de ônibus"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/_monsterbuguer/" target="_blank" rel="noopener">@_monsterbuguer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZs79dvJmDu/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Prank de generosidade, reações espontâneas de surpresa/gratidão</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Distribuir cookies grátis em fila/ônibus perto da loja, filmar reações</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZs79dvJmDu/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>C7</b> — Trend visual editada <span class="fqtd">2 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#35</span> <span class="nome">Pizza &quot;desmontada&quot; em vídeo reverso</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="35" data-nome="Pizza &quot;desmontada&quot; em vídeo reverso"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/pizzaslon/" target="_blank" rel="noopener">@pizzaslon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DbRPXK7P_8i/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Efeito satisfatório de reverse + legenda irônica de &quot;pedido devolvido&quot;</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Montagem do cookie (gotas, massa) tocada ao contrário, legenda irônica</p>
+    <a class="iglink" href="https://www.instagram.com/p/DbRPXK7P_8i/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Complexo">
+  <div class="cardhead"><span class="num">#54</span> <span class="nome">Cookie cortado revela &quot;personagem&quot; (VFX + meme)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="54" data-nome="Cookie cortado revela &quot;personagem&quot; (VFX + meme)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">Tipo 3 · Complexo</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/realpapaswolio/" target="_blank" rel="noopener">@realpapaswolio</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DY-f4tSCWOL/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Edição composta cria reveal surreal, quebra expectativa de recheio</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Exige VFX — só vale se houver habilidade de edição; senão, adaptar só o conceito</p>
+    <a class="iglink" href="https://www.instagram.com/p/DY-f4tSCWOL/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details>
+  <h3 class="exhead" style="color:#2e7d32">Todos os vídeos (23)</h3>
+  <div class="filters" data-target="crescimento">
+    <button class="fbtn active" data-f="">Todos</button>
+    <button class="fbtn" data-f="Simples" title="Trend ou formato pronto: quase não exige roteiro">Tipo 1 · Simples</button>
+    <button class="fbtn" data-f="Autoral" title="Exige um pequeno desenvolvimento de roteiro">Tipo 2 · Autoral</button>
+    <button class="fbtn" data-f="Complexo" title="Exige roteiro grande e produção maior">Tipo 3 · Complexo</button>
+  </div>
+  <div class="legenda">
+    <span><b>Simples</b> = trend/formato pronto, quase sem roteiro — grava hoje</span>
+    <span><b>Autoral</b> = exige um pequeno roteiro adaptado antes de gravar</span>
+    <span><b>Complexo</b> = roteiro grande, várias cenas/personagens — planejar antes</span>
+  </div>
+  <div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#1</span> <span class="nome">Assalto encenado que poupa só os cookies</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="1" data-nome="Assalto encenado que poupa só os cookies"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/crumblverse/" target="_blank" rel="noopener">@crumblverse</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYAF7YKu_Sf/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Assaltante libera bens, mas briga para recuperar só a caixa de cookies — prioridade invertida</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Encenar &quot;assalto&quot; cômico na porta da loja; assaltante libera tudo, menos a caixa de cookies</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYAF7YKu_Sf/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#7</span> <span class="nome">&quot;Tradução&quot; cômica da indecisão da namorada no pedido</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="7" data-nome="&quot;Tradução&quot; cômica da indecisão da namorada no pedido"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/joycelyn_e98/" target="_blank" rel="noopener">@joycelyn_e98</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DTysEuQEaJO/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Narrador exagera cada resposta vaga dela sobre o pedido</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Casal decidindo sabor de cookie, narrador &quot;traduz&quot; de forma exagerada cada indecisão</p>
+    <a class="iglink" href="https://www.instagram.com/p/DTysEuQEaJO/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#8</span> <span class="nome">&quot;Foto comigo e meus waffles&quot; que ainda nem chegaram</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="8" data-nome="&quot;Foto comigo e meus waffles&quot; que ainda nem chegaram"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/ihoptotowanj/" target="_blank" rel="noopener">@ihoptotowanj</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaDmjyMhTk4/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Contraste entre expectativa de photo-op e prato ainda vazio</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Funcionário pede foto &quot;com os cookies&quot; do cliente, mas a caixa está vazia (ainda assando)</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaDmjyMhTk4/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#9</span> <span class="nome">Gerente manda &quot;sorrir mais&quot;, funcionário deadpan</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="9" data-nome="Gerente manda &quot;sorrir mais&quot;, funcionário deadpan"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/sofresh/" target="_blank" rel="noopener">@sofresh</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DXUUe7xjRLs/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Feedback absurdo + resposta seca e desconectada — humor deadpan</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Gerente pede pro atendente sorrir mais, ele responde seco e sem expressão</p>
+    <a class="iglink" href="https://www.instagram.com/p/DXUUe7xjRLs/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#10</span> <span class="nome">&quot;Pepsi errada&quot; — desculpa dramática por erro banal</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="10" data-nome="&quot;Pepsi errada&quot; — desculpa dramática por erro banal"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><span class="autor vazio">perfil não identificado</span></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYnamCTxl-c/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Discurso emocional pesado por um &quot;erro&quot; que no fim é banal (bebida trocada)</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente se desculpa de forma dramática por erro mínimo (sabor trocado)</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYnamCTxl-c/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#12</span> <span class="nome">Garçom &quot;ameaça&quot; com utensílios (trend &quot;E aí&quot;)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="12" data-nome="Garçom &quot;ameaça&quot; com utensílios (trend &quot;E aí&quot;)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/templudohamburguer/" target="_blank" rel="noopener">@templudohamburguer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DIpI9DDyRPS/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Gestos exagerados/brincalhões com utensílios perto da mesa, áudio de trend</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente faz gesto de &quot;hype&quot; exagerado com colher/espátula ao servir cookie quente</p>
+    <a class="iglink" href="https://www.instagram.com/p/DIpI9DDyRPS/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#18</span> <span class="nome">&quot;POV: quando alguém sorri para você&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="18" data-nome="&quot;POV: quando alguém sorri para você&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/kindofabigdeal/" target="_blank" rel="noopener">@kindofabigdeal</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaLTda6K87T/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Trend de reação exagerada em corte seco</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente/cliente reage exagerado à primeira mordida do cookie quentinho</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaLTda6K87T/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#21</span> <span class="nome">Atendente erra pedido 3x e come o erro</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="21" data-nome="Atendente erra pedido 3x e come o erro"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/pasteldoleoo/" target="_blank" rel="noopener">@pasteldoleoo</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYuw8VbhBBe/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Comédia autodepreciativa POV, clímax: ela mesma come o produto errado</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente &quot;erra&quot; sabor entregue, reage exagerado, come o cookie &quot;errado&quot; satisfeita</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYuw8VbhBBe/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#24</span> <span class="nome">Desafio &quot;coma a mesa de sobremesas em 3 min&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="24" data-nome="Desafio &quot;coma a mesa de sobremesas em 3 min&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/littledessertshop/" target="_blank" rel="noopener">@littledessertshop</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYrgZzKIg0g/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Gatilho de desafio + fartura visual, convite a marcar amigos</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Torre de cookies variados com legenda de desafio, incentivo a marcações</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYrgZzKIg0g/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#29</span> <span class="nome">Confeiteira só pode comer os cookies &quot;quebrados&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="29" data-nome="Confeiteira só pode comer os cookies &quot;quebrados&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/karolbabadeira/" target="_blank" rel="noopener">@karolbabadeira</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DbGPSViRevP/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Regra restritiva do chefe + funcionária &quot;burlando&quot; de propósito — já é sobre cookie</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Encaixe direto: atendente &quot;lascando&quot; cookie de propósito pra poder comer</p>
+    <a class="iglink" href="https://www.instagram.com/p/DbGPSViRevP/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Complexo">
+  <div class="cardhead"><span class="num">#30</span> <span class="nome">Curta cinematográfico &quot;elogio ao vestido&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="30" data-nome="Curta cinematográfico &quot;elogio ao vestido&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">Tipo 3 · Complexo</span></div>
+  <div class="meta"><span class="autor vazio">perfil não identificado</span></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Da-2Lm3uy0u/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Diálogo-gancho de trend solto de uma produção cinematográfica cara</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Só a frase-gancho: cliente e atendente percebem que pediram o mesmo sabor</p>
+    <a class="iglink" href="https://www.instagram.com/p/Da-2Lm3uy0u/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#31</span> <span class="nome">Cliente &quot;difícil&quot; na maquininha, virada no final</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="31" data-nome="Cliente &quot;difícil&quot; na maquininha, virada no final"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/fabricio_ferrari/" target="_blank" rel="noopener">@fabricio_ferrari</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DUmG-puDZ23/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Paciência exagerada do atendente + desfecho subverte final &quot;bonzinho&quot;</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cena no caixa: pagamento falha, atendente super gentil, virada engraçada</p>
+    <a class="iglink" href="https://www.instagram.com/p/DUmG-puDZ23/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#34</span> <span class="nome">Lanche grátis surpresa para passageiros de ônibus</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="34" data-nome="Lanche grátis surpresa para passageiros de ônibus"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/_monsterbuguer/" target="_blank" rel="noopener">@_monsterbuguer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZs79dvJmDu/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Prank de generosidade, reações espontâneas de surpresa/gratidão</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Distribuir cookies grátis em fila/ônibus perto da loja, filmar reações</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZs79dvJmDu/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#35</span> <span class="nome">Pizza &quot;desmontada&quot; em vídeo reverso</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="35" data-nome="Pizza &quot;desmontada&quot; em vídeo reverso"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/pizzaslon/" target="_blank" rel="noopener">@pizzaslon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DbRPXK7P_8i/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Efeito satisfatório de reverse + legenda irônica de &quot;pedido devolvido&quot;</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Montagem do cookie (gotas, massa) tocada ao contrário, legenda irônica</p>
+    <a class="iglink" href="https://www.instagram.com/p/DbRPXK7P_8i/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#41</span> <span class="nome">&quot;Flip the bottle and grab a cookie&quot; — desafio de rua</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="41" data-nome="&quot;Flip the bottle and grab a cookie&quot; — desafio de rua"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Da3Ti_5xc4z/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Ativação de rua: tentativas + torcida + recompensa</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Desafio de bottle flip na porta da loja para ganhar cookie grátis</p>
+    <a class="iglink" href="https://www.instagram.com/p/Da3Ti_5xc4z/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card off" data-tipo="">
+  <div class="cardhead"><span class="num">#42</span> <span class="nome">(pendente — falhou no download)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="42" data-nome="(pendente — falhou no download)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">⚠️ Pendente</span></div>
+  <div class="meta"><span class="autor vazio">perfil não identificado</span></div>
+  <div class="player noembed"><div class="noembedbox"><p>⚠️ Vídeo pendente — falhou no download automático.<br>Aguardando envio manual.</p></div></div>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> </p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> </p>
+    
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#44</span> <span class="nome">&quot;Qual cookie ela vai escolher?&quot; — jogo de previsão</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="44" data-nome="&quot;Qual cookie ela vai escolher?&quot; — jogo de previsão"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZrq6PSglgn/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Desafio + sequência numerada de sabores + revelação</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente/cliente lança desafio, mostra 3-4 sabores sendo partidos, revela escolha</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZrq6PSglgn/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#45</span> <span class="nome">&quot;Adivinha qual eu vou escolher&quot; — 3 bebidas numeradas</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="45" data-nome="&quot;Adivinha qual eu vou escolher&quot; — 3 bebidas numeradas"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZmoJBcA0S8/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Quase foto estática + pergunta de engajamento, gera comentários</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> 3 cookies numerados na mesa, pergunta de palpite nos comentários</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZmoJBcA0S8/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#49</span> <span class="nome">Desafio &quot;termine o cookie em 4 mordidas, ganhe a caixa&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="49" data-nome="Desafio &quot;termine o cookie em 4 mordidas, ganhe a caixa&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DXTtTv5g6et/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Challenge de rua: proposta + tensão + recompensa + reação genuína</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente aborda cliente/fila com o mesmo desafio, entrega caixa grátis</p>
+    <a class="iglink" href="https://www.instagram.com/p/DXTtTv5g6et/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card off" data-tipo="">
+  <div class="cardhead"><span class="num">#50</span> <span class="nome">(pendente — falhou no download)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="50" data-nome="(pendente — falhou no download)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">⚠️ Pendente</span></div>
+  <div class="meta"><span class="autor vazio">perfil não identificado</span></div>
+  <div class="player noembed"><div class="noembedbox"><p>⚠️ Vídeo pendente — falhou no download automático.<br>Aguardando envio manual.</p></div></div>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> </p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> </p>
+    
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#51</span> <span class="nome">Mesmo desafio &quot;4 mordidas&quot; (sabor Oreo)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="51" data-nome="Mesmo desafio &quot;4 mordidas&quot; (sabor Oreo)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DVs4gK8IuBl/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Mesma estrutura do #49, repetida — confirma formato replicável em série</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Repetir a dinâmica com clientes/sabores diferentes, criar série</p>
+    <a class="iglink" href="https://www.instagram.com/p/DVs4gK8IuBl/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#52</span> <span class="nome">Jogo de rua &quot;adivinhe o sabor pelo cookie&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="52" data-nome="Jogo de rua &quot;adivinhe o sabor pelo cookie&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DT7iHqEADeM/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Totem de sabores + interação espontânea de passantes</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Caixa simples na porta da loja para clientes adivinharem sabores</p>
+    <a class="iglink" href="https://www.instagram.com/p/DT7iHqEADeM/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Complexo">
+  <div class="cardhead"><span class="num">#54</span> <span class="nome">Cookie cortado revela &quot;personagem&quot; (VFX + meme)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="54" data-nome="Cookie cortado revela &quot;personagem&quot; (VFX + meme)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">Tipo 3 · Complexo</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/realpapaswolio/" target="_blank" rel="noopener">@realpapaswolio</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DY-f4tSCWOL/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Edição composta cria reveal surreal, quebra expectativa de recheio</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Exige VFX — só vale se houver habilidade de edição; senão, adaptar só o conceito</p>
+    <a class="iglink" href="https://www.instagram.com/p/DY-f4tSCWOL/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</section>
+<section id="confianca" class="tabpane">
+  <p class="objdef"><b>Objetivo:</b> Fazer quem já chegou acreditar que o cookie é bom e que existe gente de verdade ali. &nbsp;·&nbsp; <b>Métrica:</b> Retenção, salvamentos, “preciso provar isso”</p>
+  <h3 class="exhead" style="color:#1e5b8a">Formatos (7)</h3>
+  <table class="fmttable"><tr><th>Nº</th><th>Formato</th><th>Qtd</th></tr><tr><td><b>F1</b></td><td>Bastidor/processo real (sem fala)</td><td class="ctr">4</td></tr><tr><td><b>F2</b></td><td>Prova social/degustação real</td><td class="ctr">3</td></tr><tr><td><b>F3</b></td><td>Generosidade/gesto emocional</td><td class="ctr">4</td></tr><tr><td><b>F4</b></td><td>Ambiente/slice of life aspiracional</td><td class="ctr">2</td></tr><tr><td><b>F5</b></td><td>Institucional/branding</td><td class="ctr">3</td></tr><tr><td><b>F6</b></td><td>Prova de qualidade do produto</td><td class="ctr">1</td></tr><tr><td><b>F7</b></td><td>Reação emocional ao pedido</td><td class="ctr">1</td></tr></table>
+  <details class="fmt">
+<summary><b>F1</b> — Bastidor/processo real (sem fala) <span class="fqtd">4 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#20</span> <span class="nome">Preparo de waffle no balcão (ASMR)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="20" data-nome="Preparo de waffle no balcão (ASMR)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/carnaval.rolls/" target="_blank" rel="noopener">@carnaval.rolls</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DW2ShIpjGmK/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Curiosidade de &quot;como é feito&quot; + apetite visual, sem falas</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente tirando cookie do forno e montando embalagem, cortes rápidos</p>
+    <a class="iglink" href="https://www.instagram.com/p/DW2ShIpjGmK/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#39</span> <span class="nome">&quot;POV: você trabalha em espaço apertado&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="39" data-nome="&quot;POV: você trabalha em espaço apertado&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/conazucarcafelosangeles/" target="_blank" rel="noopener">@conazucarcafelosangeles</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DY0cNShvBfD/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Comédia física da rotina real da cozinha, final de &quot;vitória&quot; coreografado</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Equipe se desviando no balcão/cozinha no pico, final com high five</p>
+    <a class="iglink" href="https://www.instagram.com/p/DY0cNShvBfD/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#53</span> <span class="nome">Bastidor moldando cookies recém-assados</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="53" data-nome="Bastidor moldando cookies recém-assados"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/vanillasugarbakeshoppe/" target="_blank" rel="noopener">@vanillasugarbakeshoppe</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZnRFMuO96J/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Puro processo/bastidor, reações de satisfação sobrepostas</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Filmar produção real da loja, cookies saindo do forno, texto de reação</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZnRFMuO96J/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#56</span> <span class="nome">Moldando cookie torto em formato perfeito</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="56" data-nome="Moldando cookie torto em formato perfeito"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/vanillasugarbakeshoppe/" target="_blank" rel="noopener">@vanillasugarbakeshoppe</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaD9S-UNJly/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Vídeo satisfying: do disforme ao redondo perfeito com cortador</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Mesma cena na cozinha: cookie torto moldado até ficar redondo</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaD9S-UNJly/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>F2</b> — Prova social/degustação real <span class="fqtd">3 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#5</span> <span class="nome">Dono pergunta satisfação e desfila prato pelo salão</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="5" data-nome="Dono pergunta satisfação e desfila prato pelo salão"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/jonathannemer/" target="_blank" rel="noopener">@jonathannemer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYz7YprhrcY/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Prova social ao vivo: elogio espontâneo + bastidor autêntico</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Fundador pergunta a cliente real se gostou, caminha pela loja com cookie na mão</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYz7YprhrcY/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#6</span> <span class="nome">Fundador distribui cookie grátis e pede nota 1-10</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="6" data-nome="Fundador distribui cookie grátis e pede nota 1-10"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/goodolcookie/" target="_blank" rel="noopener">@goodolcookie</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DVd_B18j8AS/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Amostra grátis + nota gera reação genuína, twist de flerte no final</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Fundador/atendente oferece cookie grátis na rua, pede nota — repetível semanalmente</p>
+    <a class="iglink" href="https://www.instagram.com/p/DVd_B18j8AS/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#36</span> <span class="nome">Reviewer de rua experimenta croissant viral</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="36" data-nome="Reviewer de rua experimenta croissant viral"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/rafaelavazoficial/" target="_blank" rel="noopener">@rafaelavazoficial</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DVJyamMCTCI/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Food review ambulante: pergunta → mordida → reação → nota</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Convidar reviewer/influenciador local pra provar e avaliar os cookies</p>
+    <a class="iglink" href="https://www.instagram.com/p/DVJyamMCTCI/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>F3</b> — Generosidade/gesto emocional <span class="fqtd">4 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#4</span> <span class="nome">&quot;Vizinha, guarda a pizza pra mim&quot; — presente disfarçado</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="4" data-nome="&quot;Vizinha, guarda a pizza pra mim&quot; — presente disfarçado"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/paulachiaradi/" target="_blank" rel="noopener">@paulachiaradi</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZOYnQeNLC0/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Ambiguidade golpe/generosidade; presente anônimo disfarçado de favor</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Comprar cookies anonimamente para família/funcionário com desculpa de &quot;pedido errado&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZOYnQeNLC0/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#15</span> <span class="nome">Pizza de presente para o porteiro do prédio</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="15" data-nome="Pizza de presente para o porteiro do prédio"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/daniel.lucco/" target="_blank" rel="noopener">@daniel.lucco</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DX4Dw7Hxjc0/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Gesto de bondade inesperada gera reação emocionada genuína</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Entregas-surpresa de cookies para porteiros/entregadores perto da loja</p>
+    <a class="iglink" href="https://www.instagram.com/p/DX4Dw7Hxjc0/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#25</span> <span class="nome">Mãe entrega lanche pro próprio filho (flagra)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="25" data-nome="Mãe entrega lanche pro próprio filho (flagra)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/mammafoods/" target="_blank" rel="noopener">@mammafoods</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Dav0w0dJuM0/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Calor humano/familiar dentro do ambiente de trabalho</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Dono/atendente entrega cookie pro próprio filho, reação animada genuína</p>
+    <a class="iglink" href="https://www.instagram.com/p/Dav0w0dJuM0/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Complexo">
+  <div class="cardhead"><span class="num">#28</span> <span class="nome">Distribuição de lanches p/ moradores de rua + CTA app</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="28" data-nome="Distribuição de lanches p/ moradores de rua + CTA app"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">Tipo 3 · Complexo</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/nathaliavalente/" target="_blank" rel="noopener">@nathaliavalente</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaTh1c-M-Q1/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Ato de bondade filmado, vira publi natural com CTA no fim</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Ação social com cookies (doação), fechando com cupom/promoção</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaTh1c-M-Q1/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>F4</b> — Ambiente/slice of life aspiracional <span class="fqtd">2 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#19</span> <span class="nome">Casal dividindo pizza no terraço, amiga se junta</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="19" data-nome="Casal dividindo pizza no terraço, amiga se junta"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/hayarpi_zurnachyan/" target="_blank" rel="noopener">@hayarpi_zurnachyan</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZkrru2MxAl/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Atmosfera aconchegante/aspiracional, sem roteiro de fala</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Clientes dividindo cookie em câmera lenta, boa luz, música envolvente</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZkrru2MxAl/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#22</span> <span class="nome">Pedido de sobremesa pra viagem (slice of life)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="22" data-nome="Pedido de sobremesa pra viagem (slice of life)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/lukumades_uae/" target="_blank" rel="noopener">@lukumades_uae</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DbK34eEIMpx/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Cena cotidiana bem iluminada, propaganda sutil de produto/ambiente</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cliente pedindo cookie pra viagem, embalagem fechada com carinho, luz natural</p>
+    <a class="iglink" href="https://www.instagram.com/p/DbK34eEIMpx/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>F5</b> — Institucional/branding <span class="fqtd">3 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#3</span> <span class="nome">Vinheta institucional de parceria com delivery</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="3" data-nome="Vinheta institucional de parceria com delivery"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/jimmyzburgerz/" target="_blank" rel="noopener">@jimmyzburgerz</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DahxEJlO_h0/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Comercial estético de balcão + entregador, fecha revelando nova plataforma</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Vídeo bonito do dia a dia da loja fechando com anúncio de nova plataforma de delivery</p>
+    <a class="iglink" href="https://www.instagram.com/p/DahxEJlO_h0/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Complexo">
+  <div class="cardhead"><span class="num">#27</span> <span class="nome">Mini-filme estético de marca (carro vintage)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="27" data-nome="Mini-filme estético de marca (carro vintage)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">Tipo 3 · Complexo</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/kuji.coffee/" target="_blank" rel="noopener">@kuji.coffee</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Dan_pNPs5_B/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Mini-filme de branding, cenas estéticas associam produto a estilo de vida</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Clipe estético de sabor específico + cena de estilo de vida local, golden hour</p>
+    <a class="iglink" href="https://www.instagram.com/p/Dan_pNPs5_B/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#32</span> <span class="nome">Compilação nostálgica de comerciais antigos</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="32" data-nome="Compilação nostálgica de comerciais antigos"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/albertolimax/" target="_blank" rel="noopener">@albertolimax</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYhom4jCGvs/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Curadoria de propaganda clássica emocional — motor é memória afetiva</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> &quot;Comercial estilo antigo&quot; da marca ou legenda de nostalgia sobre clipes existentes</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYhom4jCGvs/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>F6</b> — Prova de qualidade do produto <span class="fqtd">1 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#13</span> <span class="nome">&quot;Cliente cancelou&quot; achando a carne queimada</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="13" data-nome="&quot;Cliente cancelou&quot; achando a carne queimada"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/templudohamburguer/" target="_blank" rel="noopener">@templudohamburguer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaWjl3Uswpo/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Prova visual: parece queimado por fora, suculento por dentro — desmistifica reclamação</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Mostrar cookie &quot;escuro&quot;/crocante por fora e molinho por dentro, reagindo a reclamação fictícia</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaWjl3Uswpo/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>F7</b> — Reação emocional ao pedido <span class="fqtd">1 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#11</span> <span class="nome">Confeiteira se emociona com pedido do cliente</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="11" data-nome="Confeiteira se emociona com pedido do cliente"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/ch_honeycakes/" target="_blank" rel="noopener">@ch_honeycakes</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DamY8WNzQsr/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Expectativa de conflito (erro no pedido) resolvida com gentileza inesperada</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente reage emocionada a pedido incomum, resolução gentil e surpreendente</p>
+    <a class="iglink" href="https://www.instagram.com/p/DamY8WNzQsr/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details>
+  <h3 class="exhead" style="color:#1e5b8a">Todos os vídeos (18)</h3>
+  <div class="filters" data-target="confianca">
+    <button class="fbtn active" data-f="">Todos</button>
+    <button class="fbtn" data-f="Simples" title="Trend ou formato pronto: quase não exige roteiro">Tipo 1 · Simples</button>
+    <button class="fbtn" data-f="Autoral" title="Exige um pequeno desenvolvimento de roteiro">Tipo 2 · Autoral</button>
+    <button class="fbtn" data-f="Complexo" title="Exige roteiro grande e produção maior">Tipo 3 · Complexo</button>
+  </div>
+  <div class="legenda">
+    <span><b>Simples</b> = trend/formato pronto, quase sem roteiro — grava hoje</span>
+    <span><b>Autoral</b> = exige um pequeno roteiro adaptado antes de gravar</span>
+    <span><b>Complexo</b> = roteiro grande, várias cenas/personagens — planejar antes</span>
+  </div>
+  <div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#3</span> <span class="nome">Vinheta institucional de parceria com delivery</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="3" data-nome="Vinheta institucional de parceria com delivery"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/jimmyzburgerz/" target="_blank" rel="noopener">@jimmyzburgerz</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DahxEJlO_h0/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Comercial estético de balcão + entregador, fecha revelando nova plataforma</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Vídeo bonito do dia a dia da loja fechando com anúncio de nova plataforma de delivery</p>
+    <a class="iglink" href="https://www.instagram.com/p/DahxEJlO_h0/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#4</span> <span class="nome">&quot;Vizinha, guarda a pizza pra mim&quot; — presente disfarçado</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="4" data-nome="&quot;Vizinha, guarda a pizza pra mim&quot; — presente disfarçado"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/paulachiaradi/" target="_blank" rel="noopener">@paulachiaradi</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZOYnQeNLC0/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Ambiguidade golpe/generosidade; presente anônimo disfarçado de favor</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Comprar cookies anonimamente para família/funcionário com desculpa de &quot;pedido errado&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZOYnQeNLC0/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#5</span> <span class="nome">Dono pergunta satisfação e desfila prato pelo salão</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="5" data-nome="Dono pergunta satisfação e desfila prato pelo salão"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/jonathannemer/" target="_blank" rel="noopener">@jonathannemer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYz7YprhrcY/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Prova social ao vivo: elogio espontâneo + bastidor autêntico</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Fundador pergunta a cliente real se gostou, caminha pela loja com cookie na mão</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYz7YprhrcY/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#6</span> <span class="nome">Fundador distribui cookie grátis e pede nota 1-10</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="6" data-nome="Fundador distribui cookie grátis e pede nota 1-10"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/goodolcookie/" target="_blank" rel="noopener">@goodolcookie</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DVd_B18j8AS/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Amostra grátis + nota gera reação genuína, twist de flerte no final</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Fundador/atendente oferece cookie grátis na rua, pede nota — repetível semanalmente</p>
+    <a class="iglink" href="https://www.instagram.com/p/DVd_B18j8AS/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#11</span> <span class="nome">Confeiteira se emociona com pedido do cliente</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="11" data-nome="Confeiteira se emociona com pedido do cliente"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/ch_honeycakes/" target="_blank" rel="noopener">@ch_honeycakes</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DamY8WNzQsr/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Expectativa de conflito (erro no pedido) resolvida com gentileza inesperada</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente reage emocionada a pedido incomum, resolução gentil e surpreendente</p>
+    <a class="iglink" href="https://www.instagram.com/p/DamY8WNzQsr/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#13</span> <span class="nome">&quot;Cliente cancelou&quot; achando a carne queimada</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="13" data-nome="&quot;Cliente cancelou&quot; achando a carne queimada"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/templudohamburguer/" target="_blank" rel="noopener">@templudohamburguer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaWjl3Uswpo/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Prova visual: parece queimado por fora, suculento por dentro — desmistifica reclamação</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Mostrar cookie &quot;escuro&quot;/crocante por fora e molinho por dentro, reagindo a reclamação fictícia</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaWjl3Uswpo/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#15</span> <span class="nome">Pizza de presente para o porteiro do prédio</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="15" data-nome="Pizza de presente para o porteiro do prédio"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/daniel.lucco/" target="_blank" rel="noopener">@daniel.lucco</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DX4Dw7Hxjc0/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Gesto de bondade inesperada gera reação emocionada genuína</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Entregas-surpresa de cookies para porteiros/entregadores perto da loja</p>
+    <a class="iglink" href="https://www.instagram.com/p/DX4Dw7Hxjc0/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#19</span> <span class="nome">Casal dividindo pizza no terraço, amiga se junta</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="19" data-nome="Casal dividindo pizza no terraço, amiga se junta"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/hayarpi_zurnachyan/" target="_blank" rel="noopener">@hayarpi_zurnachyan</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZkrru2MxAl/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Atmosfera aconchegante/aspiracional, sem roteiro de fala</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Clientes dividindo cookie em câmera lenta, boa luz, música envolvente</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZkrru2MxAl/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#20</span> <span class="nome">Preparo de waffle no balcão (ASMR)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="20" data-nome="Preparo de waffle no balcão (ASMR)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/carnaval.rolls/" target="_blank" rel="noopener">@carnaval.rolls</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DW2ShIpjGmK/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Curiosidade de &quot;como é feito&quot; + apetite visual, sem falas</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente tirando cookie do forno e montando embalagem, cortes rápidos</p>
+    <a class="iglink" href="https://www.instagram.com/p/DW2ShIpjGmK/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#22</span> <span class="nome">Pedido de sobremesa pra viagem (slice of life)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="22" data-nome="Pedido de sobremesa pra viagem (slice of life)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/lukumades_uae/" target="_blank" rel="noopener">@lukumades_uae</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DbK34eEIMpx/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Cena cotidiana bem iluminada, propaganda sutil de produto/ambiente</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cliente pedindo cookie pra viagem, embalagem fechada com carinho, luz natural</p>
+    <a class="iglink" href="https://www.instagram.com/p/DbK34eEIMpx/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#25</span> <span class="nome">Mãe entrega lanche pro próprio filho (flagra)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="25" data-nome="Mãe entrega lanche pro próprio filho (flagra)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/mammafoods/" target="_blank" rel="noopener">@mammafoods</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Dav0w0dJuM0/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Calor humano/familiar dentro do ambiente de trabalho</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Dono/atendente entrega cookie pro próprio filho, reação animada genuína</p>
+    <a class="iglink" href="https://www.instagram.com/p/Dav0w0dJuM0/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Complexo">
+  <div class="cardhead"><span class="num">#27</span> <span class="nome">Mini-filme estético de marca (carro vintage)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="27" data-nome="Mini-filme estético de marca (carro vintage)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">Tipo 3 · Complexo</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/kuji.coffee/" target="_blank" rel="noopener">@kuji.coffee</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Dan_pNPs5_B/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Mini-filme de branding, cenas estéticas associam produto a estilo de vida</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Clipe estético de sabor específico + cena de estilo de vida local, golden hour</p>
+    <a class="iglink" href="https://www.instagram.com/p/Dan_pNPs5_B/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Complexo">
+  <div class="cardhead"><span class="num">#28</span> <span class="nome">Distribuição de lanches p/ moradores de rua + CTA app</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="28" data-nome="Distribuição de lanches p/ moradores de rua + CTA app"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">Tipo 3 · Complexo</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/nathaliavalente/" target="_blank" rel="noopener">@nathaliavalente</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaTh1c-M-Q1/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Ato de bondade filmado, vira publi natural com CTA no fim</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Ação social com cookies (doação), fechando com cupom/promoção</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaTh1c-M-Q1/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#32</span> <span class="nome">Compilação nostálgica de comerciais antigos</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="32" data-nome="Compilação nostálgica de comerciais antigos"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/albertolimax/" target="_blank" rel="noopener">@albertolimax</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYhom4jCGvs/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Curadoria de propaganda clássica emocional — motor é memória afetiva</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> &quot;Comercial estilo antigo&quot; da marca ou legenda de nostalgia sobre clipes existentes</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYhom4jCGvs/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#36</span> <span class="nome">Reviewer de rua experimenta croissant viral</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="36" data-nome="Reviewer de rua experimenta croissant viral"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/rafaelavazoficial/" target="_blank" rel="noopener">@rafaelavazoficial</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DVJyamMCTCI/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Food review ambulante: pergunta → mordida → reação → nota</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Convidar reviewer/influenciador local pra provar e avaliar os cookies</p>
+    <a class="iglink" href="https://www.instagram.com/p/DVJyamMCTCI/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#39</span> <span class="nome">&quot;POV: você trabalha em espaço apertado&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="39" data-nome="&quot;POV: você trabalha em espaço apertado&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/conazucarcafelosangeles/" target="_blank" rel="noopener">@conazucarcafelosangeles</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DY0cNShvBfD/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Comédia física da rotina real da cozinha, final de &quot;vitória&quot; coreografado</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Equipe se desviando no balcão/cozinha no pico, final com high five</p>
+    <a class="iglink" href="https://www.instagram.com/p/DY0cNShvBfD/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#53</span> <span class="nome">Bastidor moldando cookies recém-assados</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="53" data-nome="Bastidor moldando cookies recém-assados"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/vanillasugarbakeshoppe/" target="_blank" rel="noopener">@vanillasugarbakeshoppe</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZnRFMuO96J/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Puro processo/bastidor, reações de satisfação sobrepostas</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Filmar produção real da loja, cookies saindo do forno, texto de reação</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZnRFMuO96J/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#56</span> <span class="nome">Moldando cookie torto em formato perfeito</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="56" data-nome="Moldando cookie torto em formato perfeito"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/vanillasugarbakeshoppe/" target="_blank" rel="noopener">@vanillasugarbakeshoppe</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaD9S-UNJly/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Vídeo satisfying: do disforme ao redondo perfeito com cortador</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Mesma cena na cozinha: cookie torto moldado até ficar redondo</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaD9S-UNJly/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</section>
+<section id="venda" class="tabpane">
+  <p class="objdef"><b>Objetivo:</b> Dar um motivo concreto para comprar HOJE. &nbsp;·&nbsp; <b>Métrica:</b> Movimento na loja, pedidos, cliques</p>
+  <h3 class="exhead" style="color:#b8862d">Formatos (7)</h3>
+  <table class="fmttable"><tr><th>Nº</th><th>Formato</th><th>Qtd</th></tr><tr><td><b>V1</b></td><td>ASMR de recheio/reveal (desejo visual)</td><td class="ctr">6</td></tr><tr><td><b>V2</b></td><td>Ocasião de consumo</td><td class="ctr">2</td></tr><tr><td><b>V3</b></td><td>Desafio/oferta com prêmio</td><td class="ctr">1</td></tr><tr><td><b>V4</b></td><td>Food porn/montagem estética</td><td class="ctr">2</td></tr><tr><td><b>V5</b></td><td>Contraste de valor (fartura vs. expectativa)</td><td class="ctr">1</td></tr><tr><td><b>V6</b></td><td>Demonstração de produto/novidade</td><td class="ctr">2</td></tr><tr><td><b>V7</b></td><td>Engajamento de brinde/motivo</td><td class="ctr">1</td></tr></table>
+  <details class="fmt">
+<summary><b>V1</b> — ASMR de recheio/reveal (desejo visual) <span class="fqtd">6 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#40</span> <span class="nome">&quot;Manda pro garoto mais bonito&quot; — cookie recheado</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="40" data-nome="&quot;Manda pro garoto mais bonito&quot; — cookie recheado"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/conazucarcafelosangeles/" target="_blank" rel="noopener">@conazucarcafelosangeles</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DBBN0UdIio2/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> ASMR de cookie recheado + gancho de marcação (tag)</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Macro de cookie recheado sendo partido, legenda de &quot;manda pra quem ama cookie&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DBBN0UdIio2/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#43</span> <span class="nome">&quot;Você poderia ser alérgico a chocolate&quot; — gratidão</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="43" data-nome="&quot;Você poderia ser alérgico a chocolate&quot; — gratidão"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZxF9vEApwj/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Mesmo ASMR de cookie recheado + gancho de humor/gratidão</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Reaproveitar gravação macro, trocar frase de abertura por humor/gratidão</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZxF9vEApwj/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#46</span> <span class="nome">&quot;Manda pra sua pessoa de comer junto&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="46" data-nome="&quot;Manda pra sua pessoa de comer junto&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZe13OvAr4F/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Montagem de mesa farta + mecânica de marcação (tag)</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Mesa cheia de cookies/bebidas, legenda de &quot;manda pra sua pessoa&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZe13OvAr4F/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#47</span> <span class="nome">&quot;Espera até ver o recheio&quot; — corte revela camadas</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="47" data-nome="&quot;Espera até ver o recheio&quot; — corte revela camadas"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/foodisiak/" target="_blank" rel="noopener">@foodisiak</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYPV8WaoXZt/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Corte + revelação de camadas internas, texto de curiosidade</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Corte vertical em cookie/produto em camadas, mesmo gancho de &quot;espera o recheio&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYPV8WaoXZt/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#48</span> <span class="nome">Cookie recheado de Nutella sendo partido (reveal)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="48" data-nome="Cookie recheado de Nutella sendo partido (reveal)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYMYPUxgmT1/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Hook de curiosidade + reveal visual do recheio derretido</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cookie recheado (doce de leite/Nutella) partido em close, legenda de curiosidade</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYMYPUxgmT1/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#55</span> <span class="nome">Compilado de mordidas em cookies recheados (ASMR)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="55" data-nome="Compilado de mordidas em cookies recheados (ASMR)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/heitzeats/" target="_blank" rel="noopener">@heitzeats</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZfjo0RvPPx/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Sequência de mordidas puxando recheio, apelo sensorial + variedade</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Vários clientes/equipe mordendo sabores diferentes, cortes rápidos sem falas</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZfjo0RvPPx/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>V2</b> — Ocasião de consumo <span class="fqtd">2 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#37</span> <span class="nome">POV &quot;vontade de doce depois do almoço&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="37" data-nome="POV &quot;vontade de doce depois do almoço&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/kroissant.br/" target="_blank" rel="noopener">@kroissant.br</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DVJQQnJDtVR/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> POV de desejo com áudio de trend dramático/exagerado</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Funcionário/cliente em POV &quot;vontade de cookie às 15h&quot;, áudio de trend</p>
+    <a class="iglink" href="https://www.instagram.com/p/DVJQQnJDtVR/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#38</span> <span class="nome">&quot;Você precisa de uma pausa&quot; — doces no trabalho</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="38" data-nome="&quot;Você precisa de uma pausa&quot; — doces no trabalho"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/ayumidocesdobem/" target="_blank" rel="noopener">@ayumidocesdobem</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Da1Er5dxhtO/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Interrupção de rotina com mensagem de autocuidado, alívio ao saborear</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> &quot;Invadir&quot; mesa de trabalho pra entregar cookie com legenda de autocuidado</p>
+    <a class="iglink" href="https://www.instagram.com/p/Da1Er5dxhtO/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>V3</b> — Desafio/oferta com prêmio <span class="fqtd">1 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#14</span> <span class="nome">Desafio &quot;coma antes do café grátis&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="14" data-nome="Desafio &quot;coma antes do café grátis&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/templudohamburguer/" target="_blank" rel="noopener">@templudohamburguer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaO7cB_szvT/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Jogo ao vivo no salão, suspense + interação social real, sino de cobrança cômica</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Mini desafio na loja (acertar palpite) para ganhar bebida/cookie grátis, com sino</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaO7cB_szvT/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>V4</b> — Food porn/montagem estética <span class="fqtd">2 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#16</span> <span class="nome">Pizza saindo do forno + piada do abacaxi</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="16" data-nome="Pizza saindo do forno + piada do abacaxi"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/pizzeria_assaje/" target="_blank" rel="noopener">@pizzeria_assaje</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DWO5BVaDJde/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Clipe satisfatório (ASMR) + piada visual sobre polêmica de ingrediente</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cookie saindo do forno (calor, derretendo) + piada visual com ingrediente &quot;polêmico&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DWO5BVaDJde/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#17</span> <span class="nome">&quot;Make breakfast with me&quot; — montagem estética</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="17" data-nome="&quot;Make breakfast with me&quot; — montagem estética"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/faithsfresh/" target="_blank" rel="noopener">@faithsfresh</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZlmfSKproQ/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> ASMR/satisfatório, câmera de cima, ritmo calmo, sem falas</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> &quot;Monte seu cookie comigo&quot; em plano zenital, recheio/calda/cobertura</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZlmfSKproQ/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>V5</b> — Contraste de valor (fartura vs. expectativa) <span class="fqtd">1 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#2</span> <span class="nome">Cliente &quot;sem dinheiro&quot; quando o prato farto chega</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="2" data-nome="Cliente &quot;sem dinheiro&quot; quando o prato farto chega"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/afrikanakitchen/" target="_blank" rel="noopener">@afrikanakitchen</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DWoWhTcDQ1Q/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Contraste entre fala (só posso pagar pouco) e fartura real do prato entregue</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente &quot;escuta&quot; cliente dizendo que só paga 1 cookie, entrega caixa cheia</p>
+    <a class="iglink" href="https://www.instagram.com/p/DWoWhTcDQ1Q/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>V6</b> — Demonstração de produto/novidade <span class="fqtd">2 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#33</span> <span class="nome">Demonstração de &quot;coraçãozinho&quot; pro retrovisor</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="33" data-nome="Demonstração de &quot;coraçãozinho&quot; pro retrovisor"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/pr.natanaelpaixao/" target="_blank" rel="noopener">@pr.natanaelpaixao</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DbJJKRmRBuA/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> &quot;Olha essa ideia genial&quot; — montagem passo a passo + revelação do resultado</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente mostra tag/QR code sendo colado na embalagem, revela resultado</p>
+    <a class="iglink" href="https://www.instagram.com/p/DbJJKRmRBuA/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#57</span> <span class="nome">&quot;Menu secreto&quot; — como pedir item fora do cardápio</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="57" data-nome="&quot;Menu secreto&quot; — como pedir item fora do cardápio"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/itsjoboi/" target="_blank" rel="noopener">@itsjoboi</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DX2_-mBMGBH/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Tutorial de &quot;pedido secreto&quot; + nota final, gera desejo de replicar</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> &quot;Combo secreto&quot; Holy Cookie explicado pelo atendente, com nota final</p>
+    <a class="iglink" href="https://www.instagram.com/p/DX2_-mBMGBH/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details><details class="fmt">
+<summary><b>V7</b> — Engajamento de brinde/motivo <span class="fqtd">1 vídeo(s) · clique para assistir</span></summary>
+<div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#23</span> <span class="nome">Brinde &quot;pra qualquer motivo&quot; (montagem de desculpas)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="23" data-nome="Brinde &quot;pra qualquer motivo&quot; (montagem de desculpas)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/theredlionhotel/" target="_blank" rel="noopener">@theredlionhotel</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYrJJrNS3Op/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Motivos opostos alternados até virada &quot;literalmente qualquer dia&quot;</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cenas de clientes &quot;brindando&quot; com cookie, legendas de motivos diferentes</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYrJJrNS3Op/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</details>
+  <h3 class="exhead" style="color:#b8862d">Todos os vídeos (16)</h3>
+  <div class="filters" data-target="venda">
+    <button class="fbtn active" data-f="">Todos</button>
+    <button class="fbtn" data-f="Simples" title="Trend ou formato pronto: quase não exige roteiro">Tipo 1 · Simples</button>
+    <button class="fbtn" data-f="Autoral" title="Exige um pequeno desenvolvimento de roteiro">Tipo 2 · Autoral</button>
+    <button class="fbtn" data-f="Complexo" title="Exige roteiro grande e produção maior">Tipo 3 · Complexo</button>
+  </div>
+  <div class="legenda">
+    <span><b>Simples</b> = trend/formato pronto, quase sem roteiro — grava hoje</span>
+    <span><b>Autoral</b> = exige um pequeno roteiro adaptado antes de gravar</span>
+    <span><b>Complexo</b> = roteiro grande, várias cenas/personagens — planejar antes</span>
+  </div>
+  <div class="grid"><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#2</span> <span class="nome">Cliente &quot;sem dinheiro&quot; quando o prato farto chega</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="2" data-nome="Cliente &quot;sem dinheiro&quot; quando o prato farto chega"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/afrikanakitchen/" target="_blank" rel="noopener">@afrikanakitchen</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DWoWhTcDQ1Q/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Contraste entre fala (só posso pagar pouco) e fartura real do prato entregue</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente &quot;escuta&quot; cliente dizendo que só paga 1 cookie, entrega caixa cheia</p>
+    <a class="iglink" href="https://www.instagram.com/p/DWoWhTcDQ1Q/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#14</span> <span class="nome">Desafio &quot;coma antes do café grátis&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="14" data-nome="Desafio &quot;coma antes do café grátis&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/templudohamburguer/" target="_blank" rel="noopener">@templudohamburguer</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DaO7cB_szvT/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Jogo ao vivo no salão, suspense + interação social real, sino de cobrança cômica</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Mini desafio na loja (acertar palpite) para ganhar bebida/cookie grátis, com sino</p>
+    <a class="iglink" href="https://www.instagram.com/p/DaO7cB_szvT/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#16</span> <span class="nome">Pizza saindo do forno + piada do abacaxi</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="16" data-nome="Pizza saindo do forno + piada do abacaxi"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/pizzeria_assaje/" target="_blank" rel="noopener">@pizzeria_assaje</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DWO5BVaDJde/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Clipe satisfatório (ASMR) + piada visual sobre polêmica de ingrediente</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cookie saindo do forno (calor, derretendo) + piada visual com ingrediente &quot;polêmico&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DWO5BVaDJde/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#17</span> <span class="nome">&quot;Make breakfast with me&quot; — montagem estética</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="17" data-nome="&quot;Make breakfast with me&quot; — montagem estética"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/faithsfresh/" target="_blank" rel="noopener">@faithsfresh</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZlmfSKproQ/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> ASMR/satisfatório, câmera de cima, ritmo calmo, sem falas</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> &quot;Monte seu cookie comigo&quot; em plano zenital, recheio/calda/cobertura</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZlmfSKproQ/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#23</span> <span class="nome">Brinde &quot;pra qualquer motivo&quot; (montagem de desculpas)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="23" data-nome="Brinde &quot;pra qualquer motivo&quot; (montagem de desculpas)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/theredlionhotel/" target="_blank" rel="noopener">@theredlionhotel</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYrJJrNS3Op/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Motivos opostos alternados até virada &quot;literalmente qualquer dia&quot;</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cenas de clientes &quot;brindando&quot; com cookie, legendas de motivos diferentes</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYrJJrNS3Op/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card off" data-tipo="">
+  <div class="cardhead"><span class="num">#26</span> <span class="nome">(pendente — falhou no download)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="26" data-nome="(pendente — falhou no download)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b3402a;background:#fdeae5">⚠️ Pendente</span></div>
+  <div class="meta"><span class="autor vazio">perfil não identificado</span></div>
+  <div class="player noembed"><div class="noembedbox"><p>⚠️ Vídeo pendente — falhou no download automático.<br>Aguardando envio manual.</p></div></div>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> </p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> </p>
+    
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#33</span> <span class="nome">Demonstração de &quot;coraçãozinho&quot; pro retrovisor</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="33" data-nome="Demonstração de &quot;coraçãozinho&quot; pro retrovisor"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/pr.natanaelpaixao/" target="_blank" rel="noopener">@pr.natanaelpaixao</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DbJJKRmRBuA/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> &quot;Olha essa ideia genial&quot; — montagem passo a passo + revelação do resultado</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Atendente mostra tag/QR code sendo colado na embalagem, revela resultado</p>
+    <a class="iglink" href="https://www.instagram.com/p/DbJJKRmRBuA/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#37</span> <span class="nome">POV &quot;vontade de doce depois do almoço&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="37" data-nome="POV &quot;vontade de doce depois do almoço&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/kroissant.br/" target="_blank" rel="noopener">@kroissant.br</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DVJQQnJDtVR/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> POV de desejo com áudio de trend dramático/exagerado</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Funcionário/cliente em POV &quot;vontade de cookie às 15h&quot;, áudio de trend</p>
+    <a class="iglink" href="https://www.instagram.com/p/DVJQQnJDtVR/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#38</span> <span class="nome">&quot;Você precisa de uma pausa&quot; — doces no trabalho</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="38" data-nome="&quot;Você precisa de uma pausa&quot; — doces no trabalho"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/ayumidocesdobem/" target="_blank" rel="noopener">@ayumidocesdobem</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/Da1Er5dxhtO/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Interrupção de rotina com mensagem de autocuidado, alívio ao saborear</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> &quot;Invadir&quot; mesa de trabalho pra entregar cookie com legenda de autocuidado</p>
+    <a class="iglink" href="https://www.instagram.com/p/Da1Er5dxhtO/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#40</span> <span class="nome">&quot;Manda pro garoto mais bonito&quot; — cookie recheado</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="40" data-nome="&quot;Manda pro garoto mais bonito&quot; — cookie recheado"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/conazucarcafelosangeles/" target="_blank" rel="noopener">@conazucarcafelosangeles</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DBBN0UdIio2/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> ASMR de cookie recheado + gancho de marcação (tag)</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Macro de cookie recheado sendo partido, legenda de &quot;manda pra quem ama cookie&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DBBN0UdIio2/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#43</span> <span class="nome">&quot;Você poderia ser alérgico a chocolate&quot; — gratidão</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="43" data-nome="&quot;Você poderia ser alérgico a chocolate&quot; — gratidão"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZxF9vEApwj/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Mesmo ASMR de cookie recheado + gancho de humor/gratidão</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Reaproveitar gravação macro, trocar frase de abertura por humor/gratidão</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZxF9vEApwj/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#46</span> <span class="nome">&quot;Manda pra sua pessoa de comer junto&quot;</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="46" data-nome="&quot;Manda pra sua pessoa de comer junto&quot;"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZe13OvAr4F/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Montagem de mesa farta + mecânica de marcação (tag)</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Mesa cheia de cookies/bebidas, legenda de &quot;manda pra sua pessoa&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZe13OvAr4F/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#47</span> <span class="nome">&quot;Espera até ver o recheio&quot; — corte revela camadas</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="47" data-nome="&quot;Espera até ver o recheio&quot; — corte revela camadas"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/foodisiak/" target="_blank" rel="noopener">@foodisiak</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYPV8WaoXZt/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Corte + revelação de camadas internas, texto de curiosidade</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Corte vertical em cookie/produto em camadas, mesmo gancho de &quot;espera o recheio&quot;</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYPV8WaoXZt/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#48</span> <span class="nome">Cookie recheado de Nutella sendo partido (reveal)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="48" data-nome="Cookie recheado de Nutella sendo partido (reveal)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/cookiebeacon/" target="_blank" rel="noopener">@cookiebeacon</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DYMYPUxgmT1/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Hook de curiosidade + reveal visual do recheio derretido</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Cookie recheado (doce de leite/Nutella) partido em close, legenda de curiosidade</p>
+    <a class="iglink" href="https://www.instagram.com/p/DYMYPUxgmT1/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Simples">
+  <div class="cardhead"><span class="num">#55</span> <span class="nome">Compilado de mordidas em cookies recheados (ASMR)</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="55" data-nome="Compilado de mordidas em cookies recheados (ASMR)"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#2e7d32;background:#e8f5e9">Tipo 1 · Simples</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/heitzeats/" target="_blank" rel="noopener">@heitzeats</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DZfjo0RvPPx/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Sequência de mordidas puxando recheio, apelo sensorial + variedade</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> Vários clientes/equipe mordendo sabores diferentes, cortes rápidos sem falas</p>
+    <a class="iglink" href="https://www.instagram.com/p/DZfjo0RvPPx/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div><div class="card" data-tipo="Autoral">
+  <div class="cardhead"><span class="num">#57</span> <span class="nome">&quot;Menu secreto&quot; — como pedir item fora do cardápio</span></div>
+  <label class="pick"><input type="checkbox" class="pickbox" data-num="57" data-nome="&quot;Menu secreto&quot; — como pedir item fora do cardápio"> ✅ Quero fazer este</label>
+  <div class="badges"><span class="badge" style="color:#b8862d;background:#fdf3e0">Tipo 2 · Autoral</span></div>
+  <div class="meta"><a class="autor" href="https://www.instagram.com/itsjoboi/" target="_blank" rel="noopener">@itsjoboi</a></div>
+  <div class="player"><iframe src="https://www.instagram.com/p/DX2_-mBMGBH/embed/" loading="lazy" allowfullscreen scrolling="no"></iframe></div><button class="restart" onclick="restartVideo(this)" title="Recarrega o player e volta ao início">↺&nbsp; Recomeçar vídeo</button>
+  <div class="cardbody">
+    <p><b>Mecanismo:</b> Tutorial de &quot;pedido secreto&quot; + nota final, gera desejo de replicar</p>
+    <p class="sug"><b>🍪 Adaptação Holy Cookie:</b> &quot;Combo secreto&quot; Holy Cookie explicado pelo atendente, com nota final</p>
+    <a class="iglink" href="https://www.instagram.com/p/DX2_-mBMGBH/" target="_blank" rel="noopener">abrir no Instagram ↗</a>
+  </div>
+</div></div>
+</section>
+</div>
+
+<footer>Banco de Vídeos Virais Holy Cookie (Lojas do Fred) · 54 vídeos processados, 3 pendentes (#26, #42, #50)</footer>
+</div>
+
+<script>
+document.querySelectorAll(".vtab").forEach(function(t) {
+  t.addEventListener("click", function() {
+    document.querySelectorAll(".vtab").forEach(function(b) { b.classList.remove("active"); });
+    document.querySelectorAll(".view").forEach(function(v) { v.classList.remove("active"); });
+    t.classList.add("active");
+    document.getElementById(t.dataset.view).classList.add("active");
+    window.scrollTo({top: 0});
+  });
+});
+document.querySelectorAll(".tab").forEach(function(t) {
+  t.addEventListener("click", function() {
+    document.querySelectorAll(".tab").forEach(function(b) { b.classList.remove("active"); });
+    document.querySelectorAll(".tabpane").forEach(function(p) { p.classList.remove("active"); });
+    t.classList.add("active");
+    document.getElementById(t.dataset.tab).classList.add("active");
+  });
+});
+function restartVideo(btn) {
+  var iframe = btn.previousElementSibling.querySelector("iframe");
+  if (iframe) iframe.src = iframe.src;
+}
+document.querySelectorAll(".filters").forEach(function(f) {
+  f.addEventListener("click", function(e) {
+    if (!e.target.classList.contains("fbtn")) return;
+    f.querySelectorAll(".fbtn").forEach(function(b) { b.classList.remove("active"); });
+    e.target.classList.add("active");
+    var val = e.target.dataset.f;
+    var grid = f.parentElement.querySelector(".grid");
+    grid.querySelectorAll(".card").forEach(function(c) {
+      c.style.display = (!val || c.dataset.tipo === val) ? "" : "none";
+    });
+  });
+});
+function lerPicks() {
+  try { return JSON.parse(localStorage.getItem("hclf_picks") || "[]"); } catch (e) { return []; }
+}
+function salvarPicks(p) { localStorage.setItem("hclf_picks", JSON.stringify(p)); }
+document.querySelectorAll(".pickbox").forEach(function(cb) {
+  var picks = lerPicks();
+  cb.checked = picks.indexOf(cb.dataset.num) !== -1;
+  cb.addEventListener("change", function() {
+    var picks = lerPicks();
+    var i = picks.indexOf(cb.dataset.num);
+    if (cb.checked && i === -1) picks.push(cb.dataset.num);
+    if (!cb.checked && i !== -1) picks.splice(i, 1);
+    salvarPicks(picks);
+  });
+});
+</script>
+</body>
+</html>
