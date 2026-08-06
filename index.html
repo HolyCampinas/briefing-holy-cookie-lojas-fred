@@ -2023,6 +2023,8 @@ function renderLevasBriefing() {
       var original = document.querySelector('#view-banco .card[data-num="' + n + '"]');
       if (!original) return;
       var clone = original.cloneNode(true);
+      var selClone = clone.querySelector(".leva-select");
+      if (selClone) { selClone.value = l; aplicarCorSelect(selClone, l); }
       gridEl.appendChild(clone);
     });
   });
