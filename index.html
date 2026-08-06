@@ -55,8 +55,10 @@
   .pick:hover { filter: brightness(0.96); }
   .pick.primario { background: #2e7d32; border-color: #2e7d32; color: #fff; }
   .pick.secundario { background: #35648c; border-color: #35648c; color: #fff; }
+  .pick.terciario { background: #7c4a9e; border-color: #7c4a9e; color: #fff; }
   .card:has(.pick.primario) { outline: 3px solid #2e7d32; }
   .card:has(.pick.secundario) { outline: 3px solid #35648c; }
+  .card:has(.pick.terciario) { outline: 3px solid #7c4a9e; }
   .badges { padding: 0 14px 6px; display: flex; gap: 6px; flex-wrap: wrap; }
   .badge { font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
   .meta { padding: 0 14px 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: .78rem; }
@@ -78,6 +80,7 @@
   .selsub { font-size: 1rem; margin: 16px 0 8px; }
   .selsub.prim { color: #2e7d32; }
   .selsub.sec { color: #35648c; }
+  .selsub.terc { color: #7c4a9e; }
   footer { text-align: center; margin-top: 50px; font-size: .85rem; color: #8a6d55; }
 </style>
 </head>
@@ -124,7 +127,7 @@
 
 <div class="box selbox" id="selbox-briefing">
   <h2>5. ✅ Seleção de produção</h2>
-  <p class="selnota">Clique no botão de cada vídeo (no Banco de vídeos) para alternar: sem marca → 🎬 Primário → 📅 Secundário → sem marca.</p>
+  <p class="selnota">Clique no botão de cada vídeo (no Banco de vídeos) para alternar: sem marca → 🎬 Primário → 📅 Secundário → 📦 Terciário → sem marca.</p>
 
   <h3 class="selsub prim">🎬 Primário — gravando agora <span id="selcount-p">0</span></h3>
   <div id="sellist-p" class="sellist"><em>Nenhum vídeo marcado como Primário ainda.</em></div>
@@ -133,6 +136,10 @@
   <h3 class="selsub sec">📅 Secundário — para depois <span id="selcount-s">0</span></h3>
   <div id="sellist-s" class="sellist"><em>Nenhum vídeo marcado como Secundário ainda.</em></div>
   <button class="fbtn" onclick="copiarSelecao('s')">📋 Copiar lista Secundário</button>
+
+  <h3 class="selsub terc">📦 Terciário — reserva <span id="selcount-t">0</span></h3>
+  <div id="sellist-t" class="sellist"><em>Nenhum vídeo marcado como Terciário ainda.</em></div>
+  <button class="fbtn" onclick="copiarSelecao('t')">📋 Copiar lista Terciário</button>
 </div>
 </div>
 
@@ -1633,16 +1640,17 @@ function ciclarSelecao(btn) {
   var num = btn.dataset.num;
   var estados = lerEstados();
   var atual = estados[num];
-  var prox = !atual ? "p" : (atual === "p" ? "s" : null);
+  var prox = !atual ? "p" : (atual === "p" ? "s" : (atual === "s" ? "t" : null));
   if (prox) estados[num] = prox; else delete estados[num];
   salvarEstados(estados);
   aplicarEstadoBotao(btn, prox);
   renderSelecaoBriefing();
 }
 function aplicarEstadoBotao(btn, estado) {
-  btn.classList.remove("primario", "secundario");
+  btn.classList.remove("primario", "secundario", "terciario");
   if (estado === "p") { btn.classList.add("primario"); btn.textContent = "🎬 Primário — gravando agora"; }
   else if (estado === "s") { btn.classList.add("secundario"); btn.textContent = "📅 Secundário — para depois"; }
+  else if (estado === "t") { btn.classList.add("terciario"); btn.textContent = "📦 Terciário — reserva"; }
   else { btn.textContent = "☐ Marcar para seleção"; }
 }
 function renderListaSelecao(estado, containerId, countId, vazio) {
@@ -1661,12 +1669,13 @@ function renderListaSelecao(estado, containerId, countId, vazio) {
 function renderSelecaoBriefing() {
   renderListaSelecao("p", "sellist-p", "selcount-p", "Nenhum vídeo marcado como Primário ainda.");
   renderListaSelecao("s", "sellist-s", "selcount-s", "Nenhum vídeo marcado como Secundário ainda.");
+  renderListaSelecao("t", "sellist-t", "selcount-t", "Nenhum vídeo marcado como Terciário ainda.");
 }
 function copiarSelecao(estado) {
   var estados = lerEstados();
   var nums = Object.keys(estados).filter(function(n) { return estados[n] === estado; })
     .sort(function(a, b) { return parseInt(a) - parseInt(b); });
-  var titulo = estado === "p" ? "PRIMÁRIO (gravando agora)" : "SECUNDÁRIO (para depois)";
+  var titulo = estado === "p" ? "PRIMÁRIO (gravando agora)" : (estado === "s" ? "SECUNDÁRIO (para depois)" : "TERCIÁRIO (reserva)");
   var txt = titulo + " — " + nums.length + " vídeo(s):\n" + nums.map(function(n) {
     var m = VIDEO_META[n] || {};
     return "#" + n + " [" + (m.formato || "?") + "] " + (m.nome || "") + " — " + (m.url || "");
