@@ -1991,7 +1991,10 @@ function mudarLeva(sel) {
   var levas = lerLevas();
   if (sel.value) levas[num] = sel.value; else delete levas[num];
   salvarLevas(levas);
-  aplicarCorSelect(sel, sel.value);
+  document.querySelectorAll('.leva-select[data-num="' + num + '"]').forEach(function(s) {
+    s.value = sel.value;
+    aplicarCorSelect(s, sel.value);
+  });
   renderLevasBriefing();
 }
 function renderLevasBriefing() {
@@ -2020,8 +2023,6 @@ function renderLevasBriefing() {
       var original = document.querySelector('#view-banco .card[data-num="' + n + '"]');
       if (!original) return;
       var clone = original.cloneNode(true);
-      var sel = clone.querySelector(".leva-select");
-      if (sel) sel.remove();
       gridEl.appendChild(clone);
     });
   });
