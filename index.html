@@ -2009,15 +2009,22 @@ function renderLevasBriefing() {
   }
   cont.innerHTML = numsLevas.map(function(l) {
     var nums = porLeva[l].sort(function(a, b) { return parseInt(a) - parseInt(b); });
-    var itens = nums.map(function(n) {
-      var m = VIDEO_META[n] || {};
-      var link = m.url && m.url !== "LINK A CORRIGIR" ? ' — <a href="' + m.url + '" target="_blank" rel="noopener">ver</a>' : "";
-      return '<span class="selchip">' + (m.emoji || "") + ' #' + n + ' [' + (m.formato || "?") + '] ' + (m.nome || "") + link + '</span>';
-    }).join("");
     return '<h3 class="selsub" style="color:' + corDaLeva(l) + '">📦 Leva ' + l + ' <span>(' + nums.length + ' vídeo' + (nums.length > 1 ? "s" : "") + ')</span></h3>' +
-      '<div class="sellist">' + itens + '</div>' +
-      '<button class="fbtn" onclick="copiarLeva(\'' + l + '\')">📋 Copiar Leva ' + l + '</button>';
+      '<button class="fbtn" onclick="copiarLeva(\'' + l + '\')">📋 Copiar Leva ' + l + '</button>' +
+      '<div class="grid" id="levagrid-' + l + '"></div>';
   }).join("");
+  numsLevas.forEach(function(l) {
+    var nums = porLeva[l].sort(function(a, b) { return parseInt(a) - parseInt(b); });
+    var gridEl = document.getElementById("levagrid-" + l);
+    nums.forEach(function(n) {
+      var original = document.querySelector('#view-banco .card[data-num="' + n + '"]');
+      if (!original) return;
+      var clone = original.cloneNode(true);
+      var sel = clone.querySelector(".leva-select");
+      if (sel) sel.remove();
+      gridEl.appendChild(clone);
+    });
+  });
 }
 function copiarLeva(l) {
   var levas = lerLevas();
