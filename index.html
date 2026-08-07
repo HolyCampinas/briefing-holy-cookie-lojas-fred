@@ -1980,6 +1980,71 @@ function lerLevas() {
   try { return JSON.parse(localStorage.getItem("hclf_levas") || "{}"); } catch (e) { return {}; }
 }
 function salvarLevas(o) { localStorage.setItem("hclf_levas", JSON.stringify(o)); }
+// Sincronização compartilhada via Supabase — todo mundo que abrir o link vê a mesma seleção
+var LF_SUPABASE_URL = "https://maxynljenpgmmjwufbcl.supabase.co/rest/v1/lojas_fred_levas";
+var LF_SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1heHlubGplbnBnbW1qd3VmYmNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzMTk0MzEsImV4cCI6MjA4OTg5NTQzMX0.TJJoqlfZFzAzw7pN39oeyF217-h284Qrgir_KP1BYE8";
+function lfHeaders(extra) {
+  var h = { apikey: LF_SUPABASE_ANON, Authorization: "Bearer " + LF_SUPABASE_ANON };
+  for (var k in extra) h[k] = extra[k];
+  return h;
+}
+function buscarLevasRemoto() {
+  return fetch(LF_SUPABASE_URL + "?select=num,leva", { headers: lfHeaders({}) })
+    .then(function(r) { return r.json(); })
+    .then(function(rows) {
+      var o = {};
+      rows.forEach(function(r) { o[r.num] = r.leva; });
+      return o;
+    })
+    .catch(function() { return null; });
+}
+function upsertLevaRemoto(num, nome, leva) {
+  return fetch(LF_SUPABASE_URL, {
+    method: "POST",
+    headers: lfHeaders({ "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates" }),
+    body: JSON.stringify({ num: num, nome: nome, leva: leva })
+  }).catch(function() {});
+}
+function removerLevaRemoto(num) {
+  return fetch(LF_SUPABASE_URL + "?num=eq." + encodeURIComponent(num), {
+    method: "DELETE",
+    headers: lfHeaders({})
+  }).catch(function() {});
+}
+function aplicarLevasNosSelects() {
+  var levas = lerLevas();
+  document.querySelectorAll(".leva-select[data-num]").forEach(function(sel) {
+    var l = levas[sel.dataset.num];
+    sel.value = l || "";
+    aplicarCorSelect(sel, l);
+  });
+}
+function sincronizar() {
+  return buscarLevasRemoto().then(function(remoto) {
+    if (remoto === null) return; // sem internet/erro — mantém o que já está local
+    salvarLevas(remoto);
+    aplicarLevasNosSelects();
+    renderLevasBriefing();
+  });
+}
+function bootstrapSincronizacao() {
+  var local = lerLevas();
+  return buscarLevasRemoto().then(function(remoto) {
+    if (remoto === null) return;
+    if (Object.keys(remoto).length === 0 && Object.keys(local).length > 0) {
+      // servidor ainda vazio, mas já tenho seleção local (ex.: de antes desta atualização) — envia pro servidor
+      var nomes = {};
+      document.querySelectorAll(".leva-select[data-num]").forEach(function(sel) { nomes[sel.dataset.num] = sel.dataset.nome; });
+      return Promise.all(Object.keys(local).map(function(num) {
+        return upsertLevaRemoto(num, nomes[num] || "", local[num]);
+      }));
+    } else {
+      salvarLevas(remoto);
+      aplicarLevasNosSelects();
+      renderLevasBriefing();
+    }
+  });
+}
 function aplicarCorSelect(sel, leva) {
   if (leva) { sel.style.background = corDaLeva(leva); sel.style.borderColor = corDaLeva(leva); sel.style.color = "#fff"; }
   else { sel.style.background = ""; sel.style.borderColor = ""; sel.style.color = ""; }
@@ -1988,14 +2053,18 @@ function aplicarCorSelect(sel, leva) {
 }
 function mudarLeva(sel) {
   var num = sel.dataset.num;
+  var nome = sel.dataset.nome;
+  var novaLeva = sel.value;
   var levas = lerLevas();
-  if (sel.value) levas[num] = sel.value; else delete levas[num];
+  if (novaLeva) levas[num] = novaLeva; else delete levas[num];
   salvarLevas(levas);
   document.querySelectorAll('.leva-select[data-num="' + num + '"]').forEach(function(s) {
-    s.value = sel.value;
-    aplicarCorSelect(s, sel.value);
+    s.value = novaLeva;
+    aplicarCorSelect(s, novaLeva);
   });
   renderLevasBriefing();
+  var op = novaLeva ? upsertLevaRemoto(num, nome, novaLeva) : removerLevaRemoto(num);
+  op.then(sincronizar);
 }
 function renderLevasBriefing() {
   var levas = lerLevas();
@@ -2039,13 +2108,11 @@ function copiarLeva(l) {
   }).join("\n");
   navigator.clipboard.writeText(txt).then(function() { alert("Lista copiada!\n\n" + txt); });
 }
-document.querySelectorAll(".leva-select[data-num]").forEach(function(sel) {
-  var levas = lerLevas();
-  var l = levas[sel.dataset.num];
-  if (l) sel.value = l;
-  aplicarCorSelect(sel, l);
-});
+aplicarLevasNosSelects();
 renderLevasBriefing();
+bootstrapSincronizacao();
+setInterval(sincronizar, 15000);
+window.addEventListener("focus", sincronizar);
 </script>
 </body>
 </html>
